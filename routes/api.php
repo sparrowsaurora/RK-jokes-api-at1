@@ -1,6 +1,8 @@
 <?php
 
-use Illuminate\Http\Client\Response;
+//use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Response;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -12,6 +14,10 @@ use Illuminate\Support\Facades\Route;
  * V2       routes/api_v2.php
  */
 
+/**
+ * Include API Version 3 Routes
+ */
+require __DIR__ . '/api_v3.php';
 
 /**
  * Fallback route for any routes that are not defined

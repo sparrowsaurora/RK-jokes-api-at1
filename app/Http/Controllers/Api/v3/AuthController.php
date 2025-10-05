@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\v2;
+namespace App\Http\Controllers\Api\v3;
 
 use App\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
@@ -10,11 +10,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 
 
 /**
- * API Version 2 - AuthController
+ * API Version 3 - AuthController
  */
 class AuthController extends Controller
 {
@@ -30,7 +29,7 @@ class AuthController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidationException
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function register(Request $request): JsonResponse
     {
@@ -108,7 +107,8 @@ class AuthController extends Controller
             return ApiResponse::error(
                 [],
                 'Invalid credentials',
-                401);
+                401
+            );
         }
 
         $user = Auth::user();
@@ -163,5 +163,4 @@ class AuthController extends Controller
             'Logout successful'
         );
     }
-
 }

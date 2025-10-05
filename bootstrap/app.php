@@ -23,6 +23,9 @@ return Application::configure(basePath: dirname(__DIR__))
                 ->group(base_path('routes/api_v2.php'));
 
             /* Add further API versions as required */
+            Route::middleware('api')
+                ->prefix('api/v3')
+                ->group(base_path('routes/api_v3.php'));
 
         }
     )
