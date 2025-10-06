@@ -29,6 +29,24 @@ class JokeSeeder extends Seeder
                 'user_id' => 100,
                 'categories' => ['Pirate', 'Maths'],
             ],
+            [
+                'title' => 'Why do Java developers wear glasses?',
+                'content' => 'Because they can\'t C#.',
+                'user_id' => 200,
+                'categories' => ['Programming'],
+            ],
+            [
+                'title' => 'Why did the programmer quit his job?',
+                'content' => 'Because he didn\'t get arrays.',
+                'user_id' => 300,
+                'categories' => ['Programming'],
+            ],
+            [
+                'title' => 'A SQL query walks into a bar...',
+                'content' => 'He walks up to two tables and asks, \'Can I join you?\'',
+                'user_id' => 301,
+                'categories' => ['Programming'],
+            ],
         ];
 
         $users = User::all()->pluck('id', 'id')->toArray();

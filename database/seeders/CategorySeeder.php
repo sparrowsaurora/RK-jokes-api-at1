@@ -20,6 +20,14 @@ class CategorySeeder extends Seeder
             ]
         );
 
+        Category::create(
+            [
+                'id' => 2,
+                'title' => 'Programming',
+                'description' => 'programming jokes that will make you SQL',
+            ]
+        );
+
         $seedCategories = [
             [
                 'title' => 'Dad',

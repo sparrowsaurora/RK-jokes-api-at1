@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\v3\AuthController as AuthControllerV3;
 use App\Http\Controllers\Api\v3\CategoryController as CategoryControllerV3;
+use App\Http\Controllers\Api\v3\JokeController as JokeControllerV3;
+use App\Http\Controllers\Api\v3\JokeReactionController as JokeReactionControllerV3;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -54,3 +56,17 @@ Route::post('categories/{category}/delete', [CategoryControllerV3::class, 'delet
 Route::get('categories/{category}/delete', function () {
     return redirect()->route('admin.categories.index');
 });
+
+/* Jokes Routes ----------------------------------------------------- */
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::apiResource('jokes', JokeControllerV3::class);
+});
+Route::get('jokes/trash', [JokeControllerV3::class, 'trash']);
+Route::post('jokes/trash/recover', [JokeControllerV3::class, 'recoverAll']);
+Route::delete('jokes/trash/empty', [JokeControllerV3::class, 'removeAll']);
+Route::post('jokes/trash/{id}/recover', [JokeControllerV3::class, 'recoverOne']);
+Route::delete("jokes/trash/{id}/remove", [JokeControllerV3::class, 'removeOne']);
+
+/* Joke Reaction Routes ---------------------------------------------- */
+
+Route::post('jokes/{id}/react', [JokeReactionControllerV3::class, 'store'])->middleware(['auth:sanctum',]);

@@ -54,4 +54,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Joke::class);
     }
+
+    public function jokeReactions()
+    {
+        return $this->hasMany(JokeReaction::class);
+    }
 }
