@@ -17,8 +17,8 @@ class VerifyEmailController extends Controller
         if ($request->user()->hasVerifiedEmail()) {
             return redirect()->intended(route('dashboard', absolute: false).'?verified=1');
         }
+
         if ($request->user()->markEmailAsVerified()) {
-            /** @phpstan-ignore-next-line  */
             event(new Verified($request->user()));
         }
 

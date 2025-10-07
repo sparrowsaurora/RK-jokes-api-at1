@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Category;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Category;
 
 class CategorySeeder extends Seeder
 {
@@ -12,45 +13,26 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        Category::create(
-            [
-                'id' => 1,
-                'title' => 'Unknown',
-                'description' => 'Sorry, but we have no idea where to place this joke.',
-            ]
-        );
-
-        Category::create(
-            [
-                'id' => 2,
-                'title' => 'Programming',
-                'description' => 'programming jokes that will make you SQL',
-            ]
-        );
-
-        $seedCategories = [
-            [
-                'title' => 'Dad',
-                'description' => 'Dad jokes are always the most puntastic and groan worthy!',
-            ],
-            [
-                'title' => 'Pun',
-                'description' => "Simply so punny you'll have to laugh",
-            ],
-            [
-                'title' => 'Pirate',
-                'description' => 'Aaaaarrrrrrrrgh, me hearties!',
-            ],
+        $categories = [
+            'Pun',
+            'Dad Joke',
+            'Dark Humor',
+            'One-Liner',
+            'Knock-Knock',
+            'Programming',
+            'Animals',
+            'School',
+            'Politics',
+            'Workplace',
+            'Lightbulb',
+            'Mum',
+            'Science',
+            'Maths',
+            'Pirate',
         ];
 
-        // Shuffle the categories for fun ;)
-        shuffle($seedCategories);
-
-        foreach ($seedCategories as $seedCategory) {
-            Category::create($seedCategory);
+        foreach ($categories as $name) {
+            Category::firstOrCreate(['name' => $name]);
         }
-
-        // Category::factory(10)->create();
-
     }
 }

@@ -2,18 +2,24 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
-    /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens;
+    /** @use HasFactory<\Database\Factories\UserFactory>
+     * @method bool hasRole(string|array $roles)
+     * @method \Illuminate\Support\Collection getRoleNames()
+     */
+    use HasRoles;
+    use HasFactory;
+    use Notifiable;
+    use SoftDeletes;
+
 
     /**
      * The attributes that are mass assignable.
@@ -24,8 +30,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'suspended',
+        'given_name',
+        'family_name',
+        'city',
+        'state',
+        // add all other columns you want mass assignable here
     ];
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -42,21 +53,23 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
 
-    public function jokes(): HasMany
-    {
-        return $this->hasMany(Joke::class);
-    }
-
-    public function jokeReactions()
+    public function reactions()
     {
         return $this->hasMany(JokeReaction::class);
+    }
+
+    public function staff()
+    {
+        return $this->belongsTo(User::class, 'assigned_staff_id');
+    }
+
+    public function clients()
+    {
+        return $this->hasMany(User::class, 'assigned_staff_id');
     }
 }

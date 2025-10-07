@@ -14,88 +14,69 @@ class UserSeeder extends Seeder
     {
         $seedUsers = [
             [
-                'id' => 99,
-                'name' => 'Super Admin',
-                'email' => 'supervisor@example.com',
-                'password' => 'Password1',
-                'email_verified_at' => now(),
-                'roles' => ['super-user', 'admin'],
-                'permissions' => [],
-            ],
-
-            [
                 'id' => 100,
-                'name' => 'Admin I Strator',
+                'name' => 'Admin Istrator',
                 'email' => 'admin@example.com',
                 'password' => 'Password1',
                 'email_verified_at' => now(),
-                'roles' => ['admin'],
-                'permissions' => [],
+                'role' => 'Administrator',
             ],
-
             [
                 'id' => 200,
                 'name' => 'Staff User',
                 'email' => 'staff@example.com',
                 'password' => 'Password1',
                 'email_verified_at' => now(),
-                'roles' => ['staff'],
-                'permissions' => [],
+                'role' => 'Staff',
             ],
-
             [
-                'id' => 300,
+                'id' => 201,
                 'name' => 'Client User',
                 'email' => 'client@example.com',
                 'password' => 'Password1',
                 'email_verified_at' => now(),
-                'roles' => ['client'],
-                'permissions' => [],
+                'role' => 'Client',
+                'assigned_staff_id' => 200,
             ],
-
             [
-                'id' => 301,
-                'name' => 'Client User II',
-                'email' => 'client2@example.com',
+                'id' => 202,
+                'name' => 'John Doe',
+                'email' => 'john@example.com',
                 'password' => 'Password1',
-                'email_verified_at' => null,
-                'roles' => ['client'],
-                'permissions' => [],
+                'email_verified_at' => now(),
+                'role' => 'Client',
             ],
-
             [
-                'id' => 302,
-                'name' => 'Client User III',
-                'email' => 'client3@example.com',
+                'id' => 203,
+                'name' => 'Jane Doe',
+                'email' => 'jane@example.com',
                 'password' => 'Password1',
-                'email_verified_at' => null,
-                'roles' => ['client'],
-                'permissions' => [],
+                'email_verified_at' => now(),
+                'role' => 'Client',
+            ],
+            [
+                'id' => 204,
+                'name' => 'Test User',
+                'email' => 'test@example.com',
+                'password' => 'Password1',
+                'email_verified_at' => now(),
+                'role' => 'Client',
+                'assigned_staff_id' => 200,
             ],
         ];
 
-        foreach ($seedUsers as $newUser) {
-
-            // grab the roles & additional permissions from the seed users
-            $roles = $newUser['roles'];
-            unset($newUser['roles']);
-
-            $permissions = $newUser['permissions'];
-            unset($newUser['permissions']);
+        foreach ($seedUsers as $userData) {
+            $role = $userData['role'];
+            unset($userData['role']);
 
             $user = User::updateOrCreate(
-                ['id' => $newUser['id']],
-                $newUser
+                ['id' => $userData['id']],
+                array_merge($userData, [
+                    'password' => bcrypt($userData['password']),
+                ])
             );
 
-            // Uncomment this line when using Spatie Permissions
-            // $user->assignRole($roles);
-            // $user->assignPermissions($permissions);
-
+            $user->assignRole($role);
         }
-
-        // Uncomment the line below to create (10) randomly named users using the User Factory.
-        // User::factory(10)->create();
-
     }
 }

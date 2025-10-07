@@ -1,212 +1,224 @@
-# Laravel Base Blade Kit (BBK)
-<a name="top" id="top" ></a>
+# APPLICATION NAME
 
+<a name="readme-top"></a>
 
-A Laravel Blade Template with Sanctum Authentication built in.
+A WebApp for Users to post Jokes and Share them with other Users in a social media(-like) format
 
-*Based on the Blade & Breeze Starter Kit provided with Laravel versions before Laravel 12.*
-
-
-Useful links
-
-https://www.youtube.com/watch?v=GJTicY95Eq4
-
-https://scramble.dedoc.co/usage/getting-started
-
-https://laravel-news.com/withresponse
-
-https://laravel-news.com/laravel-response-classes
-
-https://medium.com/@a.shatrov.1982/building-laravel-api-http-responses-one-class-to-rule-them-all-feat-laravel-responsable-e311ad75d6ab
-
-https://magecomp.com/blog/laravel-creating-a-standardized-json-response-for-api/
-
-https://github.com/MarcinOrlowski/laravel-api-response-builder
-
-
-
-
-
-### Built With
+#### Built With
 
 [![PHP][Php.com]][Php-url]
 [![Laravel][Laravel.com]][Laravel-url]
 [![Tailwindcss][Tailwindcss.com]][Tailwindcss-url]
 [![Livewire][Livewire.com]][Livewire-url]
 [![Inertia][Inertia.com]][Inertia-url]
+[![PhpStorm][phpstorm.com]][phpstorm-url]
+[![Laragon][Laragon.org]][Laragon-url]
 
-### Editor of choice
+## Definitions
 
-[![PhpStorm][PhpStorm.com]][PhpStorm-url] 
-[![JetBrains][JetBrains.com]][JetBrains-url]
+| Term  | Definition                                                                                                  |
+| ----- | ----------------------------------------------------------------------------------------------------------- |
+| BREAD | Database operations to Browse, Read, Edit, Add and Delete data                                              |
+| CRUD  | More commonly used term over BREAD. Create (Add), Retrieve (Browse/Read), Update (Edit) and Delete (Delete) |
 
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Description
 
-A starter kit for Laravel based on Laravel's Blade templating engine, TailwindCSS v4, HyperUI components and FontAwesome Free icons.
+This project was made to Share Jokes with other Users in a social media(-like) format.  
+My main motivation was to be able to share funny and not-so-funny jokes with friends.  
+So I built this project for that reason. to share these short jokes.  
+This project solved my issue of knowing what jokes other people found funny.  
+specifically I solved this issue with a Like and Dislike System.  
+ultimately my takeaway from this project was that I don't want to write another line of PHP again
 
-It contains three sections:
-
-- Static Layout, Controller and Pages
-- Authenticated User Layout and Pages
-- Administration Layout, Controller and Pages
-
-The project was developed as a re-write of the "Retro Blade Kit" also by Adrian Gould.
-
-It provides a base template for the creation of a "SaaS" style application, omitting sections that may tie to a specific vendor such as a payment system. 
-
-#### General Welcome/Home Page
-
-![Welcome Page Screenshot](_docs/images/screenshot.png)
-
-#### Authenticated User Dashboard
-
-![Authenticated User Dashboard](_docs/images/screenshot-d.png)
-
-#### Admin Dashboard
-
-![Administration Dashboard](_docs/images/screenshot-a.png)
-
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Table of Contents
 
-- [Description](#description)
-- [Installation](#installation)
-- [Credits](#credits)
-- [Licence](#licence)
-- [Badges](#badges)
-- [Tests](#tests)
-- [Contact](#contact)
+-   [Description](#description)
+-   [Definitions](#definitions)
+-   [Installation](#installation)
+-   [Usage](#usage)
+-   [Credits](#credits)
+-   [Licence](#licence)
+-   [Badges](#badges)
+-   [Features](#features)
+-   [Tests](#tests)
+-   [Contact](#contact)
 
 ## Installation
 
+simply Clone the Repo, install npm and composer
 
-### Via Laravel Herd
-
-One-click install a new application using this starter kit through [Laravel Herd](https://herd.laravel.com):
-
-<a href="https://herd.laravel.com/new?starter-kit=adygcode/base-blade-kit"><img src="https://img.shields.io/badge/Install%20with%20Herd-fff?logo=laravel&logoColor=f53003" alt="Install with Herd"></a>
-
-### Via the Laravel Installer
-
-Create a new Laravel application using this starter kit through the official [Laravel Installer](https://laravel.com/docs/12.x/installation#installing-php):
-
-```bash
-  laravel new my-app --using=adygcode/base-blade-kit
+```shell
+  npm install
+  composer install
 ```
 
-Replace `my-app` with the name of your project, using kebab-case.
+Then run
 
+```shell
+    composer run dev
+```
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+and the project will be working!
 
+All Seeded users have their password set to 'Password1'
+and their email set to '{first_name}@example.com'
 
+e.g:
+client@example.com
+staff@example.com
+admin@example.com
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Usage
+
+TO DO: Provide instructions and examples for use. Include screenshots as
+needed.
+
+To add a screenshot, create an `assets/images` folder in your repository and
+upload your screenshot to it. Then, using the relative filepath, add it to
+your README using the following syntax:
+
+To Use this Project (as a user) first register using the register button in the navigation bar  
+![](assets/images/step1.png)  
+Then enter yoour Name, Email and password that you'd like to use for this all and click register  
+![](assets/images/step2.png)  
+Then verify your account via email.  
+![](assets/images/step3.png)  
+Congrats, you're a user now. Let's publish your first joke  
+There are already some Jokes there but head to the top right and click 'New Joke'  
+![](assets/images/step4.png)
+Now enter the details on the joke. e.g. the hook, the punchline, and the category  
+Then hit 'Save'
+![](assets/images/step5.png)
+Finally, you'll be redirected back to the Main Jokes page where you can see your joke.  
+From here just hit 'Show' (you can also hit 'Edit' to bring up the editing menu,
+and you can also hit 'Delete' to move the joke to the trash pile)  
+![](assets/images/step6.png)
+Lastly after making your joke. you and others can either 'Like' it or 'Dislike' it.  
+If you made an error, or just want to change the joke you can go to the bottom and hit exit.  
+![](assets/images/step7.png)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Credits
 
-This template is built using:
+-   Font Awesome. (n.d.). Fontawesome.com. https://fontawesome.com
+-   Laravel - The PHP Framework For Web Artisans. (2011). Laravel.com. https://laravel.com
+-   PHP: Hypertext Preprocessor. (n.d.). Www.php.net. https://php.net
+-   Professional README Guide. (n.d.). Coding-Boot-Camp.github.io. Retrieved April 15, 2024, from https://coding-boot-camp.github.io/full-stack/github/professional-readme-guide
+-   TailwindCSS. (2023). Tailwind CSS - Rapidly build modern websites
+    without ever leaving your HTML. Tailwindcss.com. https://tailwindcss.com/
 
-- Font Awesome. (n.d.). Fontawesome.com. https://fontawesome.com
-- Laravel - The PHP Framework For Web Artisans. (2011). Laravel.com. https://laravel.com
-- Laravel Bootcamp - Learn the PHP Framework for Web Artisans. (n.d.). Bootcamp.laravel.com. https://bootcamp.laravel.com/
-- PHP: Hypertext Preprocessor. (n.d.). Www.php.net. https://php.net
-- Professional README Guide. (n.d.). Coding-Boot-Camp.github.io. Retrieved April 15, 2024, from https://coding-boot-camp.github.io/full-stack/github/professional-guide
-- TailwindCSS. (2023). Tailwind CSS - Rapidly build modern websites without ever leaving your HTML. Tailwindcss.com. https://tailwindcss.com/
-- Free Open Source Tailwind CSS v4 Components | HyperUI. (2025). HyperUI. https://www.hyperui.dev/
-
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Badges
+
+<!-- PROJECT SHIELDS -->
+<!--
+*** I'm using markdown "reference style" links for readability.
+*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
+*** See the bottom of this document for the declaration of the reference variables
+*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
+*** https://www.markdownguide.org/basic-syntax/#reference-style-links
+***
+*** Forks, Issues and Licence Shields will NOT appear for Private Repos.
+*** You may want to remove this section for this assessment.
+*** Delete this block of comments once you have edited this ReadMe.
+***
+***
+-->
 
 [![Forks][forks-shield]][forks-url]
 [![Issues][issues-shield]][issues-url]
 [![Educational Community Licence][licence-shield]][licence-url]
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+## Features
 
+APPLICATION NAME features include but are not limited to:
 
-## Tests
+#### Jokes
 
-TBD
+The Jokes Feature has the usual CRUD/BREAD operations including:
 
+-   Browse Jokes [Guest, User, Admin]
+-   Retrieve Joke [Guest, User, Admin]
+    -   includes search
+-   Edit Joke [Admin, Owner]
+-   Update Joke [Admin, Owner]
+-   Delete Joke [Admin, Owner]
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+#### Users
 
+The Users feature includes the standard CRUD/BREAD:
+
+-   User self-registration [Guest]
+-   Login [Registered User]
+-   Logout [Registered User]
+-   Profile Edit [Admin, Owner]
+-   Account Administration [Admin, Owner]
+
+#### Administration
+
+-   Work BREAD [Admin]
+-   User BREAD [Admin]
+-   Permissions Administration [Admin]
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!--## Tests
+
+Go the extra mile and write tests for your application. Then provide examples on how to run them here.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p> -->
 
 ## Contact
 
-Adrian Gould: Lecturer (ASL1), [North Metropolitan TAFE](https://northmetrotafe.wa.edu.au), Perth WA
-- GitHub Pages: [https://adygcode.github.io](https://adygcode.github.io)
-- GitHub Repos: [https://github.com/AdyGCode](https://github.com/AdyGCode)
-- Starter Kit Repo: [Retro Blade Starter Kit](https://github.com/AdyGCode/retro-blade-kit)
+Ryan Kelley - 20136584@tafe.wa.edu.au
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+Project Link: https://github.com/sparrowsaurora/RK-saas-fed-at2-pt2
 
-
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Licence
 
-The Laravel "Base Blade Kit" Starter Kit is open-sourced software licensed under the MIT license.
+This Project Uses [GNU GPLv3](License.md).
 
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
 
+TO DO: Update the links in the MarkDown Links and Images section of the
+original MarkDown document as needed. The links are not visible in the
+rendered page on GitHub.
 
-[forks-shield]: http://img.shields.io/github/forks/adygcode/base-blade-kit.svg?style=for-the-badge
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[forks-url]: https://github.com/AdyGCode/base-blade-kit/network/members
-
-[issues-shield]: http://img.shields.io/github/issues/adygcode/base-blade-kit.svg?style=for-the-badge
-
-[issues-url]: https://github.com/adygcode/base-blade-kit/issues
-
-[licence-shield]: https://img.shields.io/github/license/adygcode/base-blade-kit.svg?style=for-the-badge
-
-[licence-url]: https://github.com/adygcode/base-blade-kit/blob/main/License.md
-
-[product-screenshot]: _docs/images/screenshot.png
-
+[forks-shield]: http://img.shields.io/github/forks/adygcode/workopia-laravel-v11.svg?style=for-the-badge
+[forks-url]: https://github.com/AdyGCode/workopia-laravel-v11/network/members
+[issues-shield]: http://img.shields.io/github/issues/adygcode/workopia-laravel-v11.svg?style=for-the-badge
+[issues-url]: https://github.com/adygcode/workopia-laravel-v11/issues
+[licence-shield]: https://img.shields.io/github/license/adygcode/workopia-laravel-v11.svg?style=for-the-badge
+[licence-url]: https://github.com/adygcode/workopia-laravel-v11/blob/main/License.md
+[product-screenshot]: images/screenshot.png
 [Laravel.com]: https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
-
 [Laravel-url]: https://laravel.com
-
 [Tailwindcss.com]: https://img.shields.io/badge/Tailwindcss-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white
-
 [Tailwindcss-url]: https://tailwindcss.com
-
 [Livewire.com]: https://img.shields.io/badge/Livewire-4E56A6?style=for-the-badge&logo=livewire&logoColor=white
-
 [Livewire-url]: https://livewire.laravel.com
-
 [Inertia.com]: https://img.shields.io/badge/Inertia-9553E9?style=for-the-badge&logo=inertia&logoColor=white
-
 [Inertia-url]: https://inertiajs.com
-
 [Php.com]: https://img.shields.io/badge/Php-777BB4?style=for-the-badge&logo=php&logoColor=white
-
 [Php-url]: https://inertiajs.com
-
-[JetBrains.com]: https://img.shields.io/badge/JetBrains-000000?style=for-the-badge&logo=jetbrains&logoColor=white
-
-[JetBrains-url]: https://jetbrains.com
-
-[PhpStorm.com]: https://img.shields.io/badge/phpstorm-000000?style=for-the-badge&logo=phpstorm&logoColor=white
-
-[PhpStorm-url]: https://www.jetbrains.com/phpstorm/
+[phpstorm.com]: https://img.shields.io/badge/PhpStorm-000000?style=for-the-badge&logo=phpstorm&logoColor=white
+[phpstorm-url]: https://www.jetbrains.com/phpstorm/
+[Laragon.org]: https://img.shields.io/badge/Laragon-4CAF50?style=for-the-badge&logoColor=white
+[Laragon-url]: https://laragon.org/

@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Validator;
 
 
 /**
- * API Version 1 - AuthController
+ * API Version 3 - AuthController
  */
 class AuthController extends Controller
 {
@@ -107,7 +107,8 @@ class AuthController extends Controller
             return ApiResponse::error(
                 [],
                 'Invalid credentials',
-                401);
+                401
+            );
         }
 
         $user = Auth::user();
@@ -162,5 +163,4 @@ class AuthController extends Controller
             'Logout successful'
         );
     }
-
 }

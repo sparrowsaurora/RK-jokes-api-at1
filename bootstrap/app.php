@@ -1,11 +1,12 @@
 <?php
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Request;
+use Spatie\Permission\Middleware\PermissionMiddleware;
+use Spatie\Permission\Middleware\RoleMiddleware;
+use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -17,27 +18,21 @@ return Application::configure(basePath: dirname(__DIR__))
             Route::middleware('api')
                 ->prefix('api/v1')
                 ->group(base_path('routes/api_v1.php'));
-
-            \Illuminate\Support\Facades\Route::middleware('api')
-                ->prefix('api/v2')
-                ->group(base_path('routes/api_v2.php'));
-
-            /* Add further API versions as required */
-            Route::middleware('api')
-                ->prefix('api/v3')
-                ->group(base_path('routes/api_v3.php'));
-
         }
     )
-    ->withMiddleware(function (Middleware $middleware): void {
-        //
+    ->withMiddleware(function (Middleware $middleware) {
+        $middleware->alias([
+            'role' => RoleMiddleware::class,
+            'permission' => PermissionMiddleware::class,
+            'role_or_permission' => RoleOrPermissionMiddleware::class,
+        ]);
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
+    ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function(ModelNotFoundException $error, Request $request){
             if($request->wantsJson()){
                 return response()->json([
                     'error'=>'entry for '.str_replace('App','',$error->getModel()).' not found'
-                    ],
+                ],
                     404
                 );
             }

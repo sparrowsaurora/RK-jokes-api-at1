@@ -1,29 +1,29 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "adygcode/base-blade-kit",
+    "name": "adygcode/retro-blade-kit",
     "type": "project",
-    "description": "A Laravel Blade Template with Sanctum Authentication built in",
+    "description": "Unofficial 'Retro' (Laravel 11) Blade Starter Kit",
     "keywords": [
         "laravel",
         "framework"
     ],
     "license": "MIT",
     "require": {
-        "php": ">=8.2",
-        "dedoc/scramble": "^0.12.28",
-        "laravel/breeze": "^2.3",
+        "php": "^8.2",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
-        "laravel/telescope": "^5.10",
         "laravel/tinker": "^2.10.1",
-        "livewire/livewire": "^3.6"
+        "livewire/livewire": "^3.6",
+        "spatie/laravel-permission": "^6.20",
+      "ext-http": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.15",
         "fakerphp/faker": "^1.23",
-        "larastan/larastan": "^3.5",
-        "laravel/pint": "^1.24",
+        "laravel/pail": "^1.2.2",
+        "laravel/pint": "^1.13",
         "laravel/sail": "^1.41",
+        "laravel/telescope": "^5.7",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
         "pestphp/pest": "^3.8",
@@ -59,33 +59,12 @@
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"npm run dev\" --names='server,queue,vite'"
-        ],
-        "dev-base": [
-            "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite"
-        ],
-        "dev-linux": [
-            "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74,#74fdc5\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" \"mailpit --smtp:0.0.0.0:2525\" --names=server,queue,logs,vite,mailpit"
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"npm run dev\" \"c:\\Laragon\\bin\\mailpit\\mailpit --smtp 0.0.0.0:2525\" --names='server,queue,vite'"
         ],
         "test": [
             "@php artisan config:clear --ansi",
             "@php artisan test"
-        ],
-        "phpstan": [
-            "./vendor/bin/phpstan analyse --memory-limit=2G"
         ]
-    },
-    "scripts-descriptions": {
-        "dev": "Run Dev Env: omitsLaravel Pail, includes MailPit",
-        "dev-base": "Run Dev Env: omits MailPit, Laravel Pail.",
-        "dev-linux": "Run Dev Env: includes MailPit, Laravel Pail.",
-        "phpstan": "Run PHPStan static analysis against your application.",
-        "post-autoload-dump": "Executes automatically after a composer dump-autoload",
-        "post-update-cmd": "Executes automatically after a composer update",
-        "post-root-package-install": "Executes automatically ONLY main laravel package installation",
-        "post-create-project-cmd": "Executes automatically ONLY after initial create project"
     },
     "extra": {
         "laravel": {

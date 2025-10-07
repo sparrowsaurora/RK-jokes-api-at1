@@ -2,23 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class JokeReaction extends Model {
-    use HasFactory;
-
-    protected $fillable = [
-        'user_id',
-        'joke_id',
-        'is_positive',
-    ];
-
-    public function joke() {
-        return $this->belongsTo(Joke::class);
-    }
+class JokeReaction extends Model
+{
+    protected $fillable = ['user_id', 'joke_id', 'type'];
 
     public function user() {
         return $this->belongsTo(User::class);
+    }
+
+    public function joke() {
+        return $this->belongsTo(Joke::class);
     }
 }
