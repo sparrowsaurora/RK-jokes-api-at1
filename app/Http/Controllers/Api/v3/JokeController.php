@@ -64,7 +64,7 @@ class JokeController extends Controller
      */
     public function show(string $id): JsonResponse
     {
-        $joke = Joke::with(['user', 'categories'])->find($id);;
+        $joke = Joke::with(['user', 'categories'])->find($id);
 
         if (!$joke) {
             return ApiResponse::error([], "Joke not found", 404);
@@ -114,7 +114,7 @@ class JokeController extends Controller
 
         $joke->delete();
 
-        return ApiResponse::success([], "Joke moved to trash");
+        return ApiResponse::success([], "Joke <$id> moved to trash");
     }
 
     /**

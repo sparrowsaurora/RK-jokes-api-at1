@@ -61,11 +61,13 @@ Route::get('categories/{category}/delete', function () {
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('jokes', JokeControllerV3::class);
 });
-Route::get('jokes/trash', [JokeControllerV3::class, 'trash']);
+Route::get('jokes/trash/all', [JokeControllerV3::class, 'trash'])->name('jokes.trash');
 Route::post('jokes/trash/recover', [JokeControllerV3::class, 'recoverAll']);
 Route::delete('jokes/trash/empty', [JokeControllerV3::class, 'removeAll']);
 Route::post('jokes/trash/{id}/recover', [JokeControllerV3::class, 'recoverOne']);
 Route::delete("jokes/trash/{id}/remove", [JokeControllerV3::class, 'removeOne']);
+
+
 
 /* Joke Reaction Routes ---------------------------------------------- */
 
