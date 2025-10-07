@@ -25,4 +25,8 @@ class StaticPages extends Controller
     {
         return view('static/contact-us');
     }
+
+    public function dashboard() {
+        return view('static.dashboard');
+    }
 }

@@ -1,8 +1,10 @@
 <?php
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Middleware\PermissionMiddleware;
 use Spatie\Permission\Middleware\RoleMiddleware;
@@ -32,8 +34,7 @@ return Application::configure(basePath: dirname(__DIR__))
             if($request->wantsJson()){
                 return response()->json([
                     'error'=>'entry for '.str_replace('App','',$error->getModel()).' not found'
-                ],
-                    404
+                ], 404
                 );
             }
         });

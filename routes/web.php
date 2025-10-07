@@ -12,10 +12,11 @@ Route::get('/', [StaticPages::class, 'welcome'])->name('home');
 Route::get('/contact', [StaticPages::class, 'contact'])->name('contact');
 Route::get('/privacy', [StaticPages::class, 'privacy'])->name('privacy');
 Route::get('/about', [StaticPages::class, 'about'])->name('about');
+Route::get('/dashboard', [StaticPages::class, 'dashboard'])->name('dashboard');
 
-Route::get('/dashboard', fn () => to_route('jokes.index'))
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+//Route::get('/dashboard', fn () => to_route('jokes.index'))
+//    ->middleware(['auth', 'verified'])
+//    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
