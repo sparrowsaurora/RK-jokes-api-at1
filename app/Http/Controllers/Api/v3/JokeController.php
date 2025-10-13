@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v3;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Joke;
 use App\Responses\ApiResponse;
 use Illuminate\Http\JsonResponse;
@@ -190,6 +191,24 @@ class JokeController extends Controller
         $joke->forceDelete();
 
         return ApiResponse::success([], "Joke permanently deleted");
+    }
+
+    public function random()
+    {
+        $joke = Joke::inRandomOrder()->first();
+
+        return ApiResponse::success($joke, "Random joke retrieved");
+    }
+
+    // Display all jokes in a category
+    public function jokesByCategory(string $categoryId): JsonResponse
+    {
+        $category = Category::find($categoryId);
+        if (!$category) {
+            return ApiResponse::error([], "Category not found", 404);
+        }
+        $jokes = $category->jokesIncategory()->get();
+        return ApiResponse::success($jokes, "Jokes retrieved");
     }
 
 

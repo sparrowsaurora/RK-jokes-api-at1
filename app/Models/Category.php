@@ -48,4 +48,9 @@ class Category extends Model
     {
         return $this->jokes()->orderBy('created_at', 'desc');
     }
+
+    public function jokesInCategory()
+    {
+        return $this->jokes()->orderBy('created_at', 'desc');
+    }
 }

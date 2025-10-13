@@ -163,4 +163,100 @@ class AuthController extends Controller
             'Logout successful'
         );
     }
+
+    public function edit(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        $validator = Validator::make($request->all(), [
+            'email' => ['sometimes', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'name' => ['sometimes', 'string', 'max:255'],
+            'password' => ['sometimes', 'string', 'min:8', 'confirmed'], // must include password_confirmation field if sent
+            'current_password' => ['required_with:password', 'string'], // only required if password change attempted
+        ]);
+
+        if ($validator->fails()) {
+            return ApiResponse::error(
+                ['error' => $validator->errors()],
+                'Invalid input',
+                422
+            );
+        }
+
+        // If password change requested, verify the old one first
+        if ($request->filled('password')) {
+            if (!Hash::check($request->current_password, $user->password)) {
+                return ApiResponse::error([], 'Current password is incorrect', 403);
+            }
+            $user->password = Hash::make($request->password);
+        }
+
+        // Update fields (if present)
+        if ($request->filled('name')) {
+            $user->name = $request->name;
+        }
+        if ($request->filled('email')) {
+            $user->email = $request->email;
+        }
+
+        $user->save();
+
+        return ApiResponse::success([
+            'user' => $user->only(['id', 'name', 'email']),
+        ], 'Profile updated successfully');
+
+        /*
+         * POTENTIAL PAYLOADS
+         *      Password
+            {
+                "current_password": "OldPassword1",
+                "password": "NewPassword1",
+                "password_confirmation": "NewPassword1"
+            }
+         *
+         *      Email
+            {
+                "email": "new@example.com"
+            }
+         *
+         *      Name
+            {
+                "name": "New Name"
+            }
+         *
+         */
+    }
+
+    public function delete(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => ['required', 'string', 'email', 'max:255',],
+            'password' => ['required', 'string',],
+        ]);
+
+        //get current user for later
+        $user = $request->user();
+
+        if ($validator->fails()) {
+            return ApiResponse::error(
+                ['error' => $validator->errors()],
+                'Invalid credentials',
+                401
+            );
+        }
+
+        // check password and email input against records for extra security
+        if ($user->email !== $request->email) {
+            return ApiResponse::error([], 'Email does not match the signed-in account', 403);
+        }
+        if (!Hash::check($request->password, $user->password)) {
+            return ApiResponse::error([], 'Invalid password', 403);
+        }
+
+        // logout + delete
+        $user->tokens()->delete();
+        $user->delete();
+
+        return ApiResponse::success([],'Account deleted successfully');
+    }
 }

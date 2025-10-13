@@ -66,4 +66,6 @@ class Joke extends Model
     {
         return $this->negativeReactions()->count();
     }
+
+
 }
