@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
+use Psy\Util\Json;
 
 class CategoryController extends Controller
 {
@@ -39,7 +40,7 @@ class CategoryController extends Controller
 
         // return view
         return ApiResponse::success(
-            [$categories, $trashCount, $search],
+            ['categories' => $categories, 'trashCount' => $trashCount, 'searchResult' => $search],
             "resources gathered successfully"
         );
     }
@@ -56,7 +57,7 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'title' => [
@@ -74,8 +75,7 @@ class CategoryController extends Controller
 
         $category = Category::create($validated);
 
-        return redirect()->route('admin.categories.index')
-            ->with('success', "Category {$category->title} added successfully");
+        return ApiResponse::success([], "Category {$category->title} added successfully");
     }
 
     /**
@@ -109,7 +109,7 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category): RedirectResponse
+    public function update(Request $request, Category $category): JsonResponse
     {
         $validated = $request->validate([
             'title' => [
@@ -127,8 +127,7 @@ class CategoryController extends Controller
 
         $category->update($validated);
 
-        return redirect()->route('admin.categories.index')
-            ->with('success', "Category {$category->title} updated successfully");
+        return ApiResponse::success([], "Category {$category->title} updated successfully");
     }
 
     /**
@@ -145,17 +144,14 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        $categoryTitle = $category->title;
-
         $category->delete();
 
-        return redirect()->route('admin.categories.index')
-            ->with('success', "Category {$categoryTitle} successfully");
+        return ApiResponse::success([], "Category {$category->title} destroyed successfully");
     }
 
 
 
-    public function trash(Request $request): View
+    public function trash(Request $request): JsonResponse
     {
 
         $validated = $request->validate([
@@ -174,9 +170,10 @@ class CategoryController extends Controller
             ->withCount('jokes')
             ->paginate($perPage, ['*'], 'page', $page);
 
-        return view('admin.categories.trash')
-            ->with('categories', $categories)
-            ->with('search', $search);
+        return ApiResponse::success(
+            ['categories' => $categories, 'search' => $search],
+            "retrieved categories from trash"
+        );
     }
 
 

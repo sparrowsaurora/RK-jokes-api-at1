@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Api\v3\AuthController as AuthControllerV3;
 use App\Http\Controllers\Api\v3\CategoryController as CategoryControllerV3;
 use App\Http\Controllers\Api\v3\JokeController as JokeControllerV3;
@@ -40,15 +39,25 @@ Route::prefix('auth')
 Route::prefix('admin')
     ->group(function () {
         Route::get('/', [AdminUserControllerV3::class, 'index']);
-        Route::get('users', [AdminUserControllerV3::class, 'users'])->name('users');
+        Route::prefix('users')->group(function () {
+            Route::get('/', [AdminUserControllerV3::class, 'users'])->name('users');
+            Route::post('suspend/{userId}', [AdminUserControllerV3::class, 'suspendUser']);
+            Route::post('unsuspend/{userId}', [AdminUserControllerV3::class, 'unsuspendUser']);
+        });
 
         Route::prefix('category')
             ->group(function () {
                 Route::resource("categories", AdminCategoryControllerV3::class);
+                Route::prefix('trash')
+                    ->group(function () {
+                        Route::get("/all", [AdminCategoryControllerV3::class, 'trash']);
+                    });
             });
     });
 
 /* Categories Routes ------------------------------------------------------ */
+
+
 Route::get('categories/trash', [CategoryControllerV3::class, 'trash'])
     ->name('categories.trash');
 

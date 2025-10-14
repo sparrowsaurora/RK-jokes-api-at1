@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v3;
 use App\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -60,6 +61,8 @@ class AuthController extends Controller
             ),
         ]);
 
+        event(new Registered($user));
+
         $token = $user->createToken('MyAppToken')->plainTextToken;
 
         return ApiResponse::success(
@@ -70,6 +73,11 @@ class AuthController extends Controller
             'User successfully created',
             201
         );
+    }
+
+    public function verifyAccount(Request $request)
+    {
+        // email verification endpoint
     }
 
     /**

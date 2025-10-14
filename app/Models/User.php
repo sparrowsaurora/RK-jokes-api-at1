@@ -59,4 +59,17 @@ class User extends Authenticatable
     {
         return $this->hasMany(JokeReaction::class);
     }
+
+    public function unsuspendUser()
+    {
+        $this->status = null;
+        $this->save();
+    }
+
+    public function suspendUser()
+    {
+        $this->status = 'suspended';
+        $this->save();
+    }
+
 }

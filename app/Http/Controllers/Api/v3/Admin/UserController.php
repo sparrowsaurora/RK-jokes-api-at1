@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Responses\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Number;
+use Illuminate\Http\Request;
 
 
 class UserController extends Controller
@@ -34,5 +35,19 @@ class UserController extends Controller
             ['users' => $users],
             'Users retrieved successfully'
         );
+    }
+
+    public function suspendUser(string $id)
+    {
+        $user = User::find($id);
+        $user->suspendUser();
+        return ApiResponse::success([$user->status], "suspended user <{$user->id}> successfully");
+    }
+
+    public function unsuspendUser(string $id)
+    {
+        $user = User::find($id);
+        $user->unsuspendUser();
+        return ApiResponse::success([], "unsuspended user <{$user->id}> successfully");
     }
 }
