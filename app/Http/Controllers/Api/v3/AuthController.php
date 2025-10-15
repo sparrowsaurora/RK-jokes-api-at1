@@ -61,7 +61,9 @@ class AuthController extends Controller
             ),
         ]);
 
-        event(new Registered($user));
+        $user->assignRole('client'); // assign client role (new)
+
+//        event(new Registered($user));
 
         $token = $user->createToken('MyAppToken')->plainTextToken;
 

@@ -4,9 +4,7 @@ use App\Http\Controllers\Api\v3\AuthController as AuthControllerV3;
 use App\Http\Controllers\Api\v3\CategoryController as CategoryControllerV3;
 use App\Http\Controllers\Api\v3\JokeController as JokeControllerV3;
 use App\Http\Controllers\Api\v3\JokeReactionController as JokeReactionControllerV3;
-use App\Http\Controllers\Api\v3\Admin\CategoryController as AdminCategoryControllerV3;
-use App\Http\Controllers\Api\v3\Admin\UserController as AdminUserControllerV3;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\v3\UserController as UserControllerV3;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -19,89 +17,68 @@ use Illuminate\Support\Facades\Route;
  * - Profile, Logout, User details (authentication required)
  */
 
+//routing stuff holder
+// Route::middleware('role:Client|Staff|Administrator')->group(function () {
+//  Route::middleware('role:Administrator|Staff')->group(function () {
+
 Route::prefix('auth')
     ->group(function () {
         Route::post('register', [AuthControllerV3::class, 'register']);
         Route::post('login', [AuthControllerV3::class, 'login']);
 
-        Route::get('profile', [AuthControllerV3::class, 'profile'])
-            ->middleware(['auth:sanctum',]);
-        Route::post('logout', [AuthControllerV3::class, 'logout'])
-            ->middleware(['auth:sanctum',]);
-        Route::put('edit', [AuthControllerV3::class, 'edit'])
-            ->middleware(['auth:sanctum',]);
-        Route::delete('delete', [AuthControllerV3::class, 'delete'])
-            ->middleware(['auth:sanctum',]);
-
+        Route::middleware(['auth:sanctum'])->group(function () {
+            Route::get('profile', [AuthControllerV3::class, 'profile']);
+            Route::post('logout', [AuthControllerV3::class, 'logout']);
+            Route::put('edit', [AuthControllerV3::class, 'edit']);
+            Route::delete('delete', [AuthControllerV3::class, 'delete']);
+        });
     });
 
 // TODO: make admin/staff only
 Route::prefix('admin')
     ->group(function () {
-        Route::get('/', [AdminUserControllerV3::class, 'index']);
+        Route::get('/', [UserControllerV3::class, 'adminDashboard']);
+        Route::resource('users', UserControllerV3::class);
         Route::prefix('users')->group(function () {
-            Route::get('/', [AdminUserControllerV3::class, 'users'])->name('users');
-            Route::post('suspend/{userId}', [AdminUserControllerV3::class, 'suspendUser']);
-            Route::post('unsuspend/{userId}', [AdminUserControllerV3::class, 'unsuspendUser']);
+            //Route::get('/', [AdminUserControllerV3::class, 'users'])->name('users');
+            Route::post('suspend/{userId}', [UserControllerV3::class, 'suspendUser']);
+            Route::post('unsuspend/{userId}', [UserControllerV3::class, 'unsuspendUser']);
+            Route::post('search', [UserControllerV3::class, 'search']);
         });
-
-        Route::prefix('category')
-            ->group(function () {
-                Route::resource("categories", AdminCategoryControllerV3::class);
-                Route::prefix('trash')
-                    ->group(function () {
-                        Route::get("/all", [AdminCategoryControllerV3::class, 'trash']);
-                    });
-            });
     });
 
 /* Categories Routes ------------------------------------------------------ */
-
-
-Route::get('categories/trash', [CategoryControllerV3::class, 'trash'])
-    ->name('categories.trash');
-
-Route::delete('categories/trash/empty', [CategoryControllerV3::class, 'removeAll'])
-    ->name('categories.trash.remove.all');
-
-Route::post('categories/trash/recover', [CategoryControllerV3::class, 'recoverAll'])
-    ->name('categories.trash.recover.all');
-
-Route::delete('categories/trash/{id}/remove', [CategoryControllerV3::class, 'removeOne'])
-    ->name('categories.trash.remove.one');
-
-Route::post('categories/trash/{id}/recover', [CategoryControllerV3::class, 'recoverOne'])
-    ->name('categories.trash.recover.one');
-
-/** Stop people trying to "GET" admin/categories/trash/1234/delete or similar */
-Route::get('categories/trash/{id}/{method}', [CategoryControllerV3::class, 'trash']);
-
 Route::resource("categories", CategoryControllerV3::class);
+Route::prefix('categories')->group(function () {
+    Route::prefix('trash')->group(function () {
+        /** Stop people trying to "GET" admin/categories/trash/1234/delete or similar */
+        Route::get('{id}/{method}', [CategoryControllerV3::class, 'trash']);
+        Route::get('/', [CategoryControllerV3::class, 'trash']);
+        Route::delete('empty', [CategoryControllerV3::class, 'removeAll']);
+        Route::post('recover', [CategoryControllerV3::class, 'recoverAll']);
+        Route::delete('{id}/remove', [CategoryControllerV3::class, 'removeOne']);
+        Route::post('{id}/recover', [CategoryControllerV3::class, 'recoverOne']);
+        /** Stop people trying to "GET" admin/categories/trash/1234/delete or similar */
+        Route::get('{id}/{method}', [CategoryControllerV3::class, 'trash']);
+    });
 
-Route::post('categories/{category}/delete', [CategoryControllerV3::class, 'delete'])
-    ->name('categories.delete');
-
-Route::get('categories/{category}/delete', function () {
-    return redirect()->route('admin.categories.index');
+    Route::post('search', [CategoryControllerV3::class, 'search']);
 });
 
 /* Jokes Routes ----------------------------------------------------- */
+Route::resource('jokes', JokeControllerV3::class)->middleware(['auth:sanctum',]);
+Route::prefix('jokes')->group(function () {
+    Route::get('random', [JokeControllerV3::class, 'random']);
+    Route::get('{categoryId}/all', [JokeControllerV3::class, 'jokesByCategory']);
 
-route::get('jokes/random', [JokeControllerV3::class, 'random']);
-route::get('jokes/{categoryId}/all', [JokeControllerV3::class, 'jokesByCategory']);
+    Route::prefix('trash')->group(function () {
+        Route::get('/', [JokeControllerV3::class, 'trash'])->name('jokes.trash');
+        Route::post('recover', [JokeControllerV3::class, 'recoverAll']);
+        Route::delete('empty', [JokeControllerV3::class, 'removeAll']);
+        Route::post('{id}/recover', [JokeControllerV3::class, 'recoverOne']);
+        Route::delete("{id}/remove", [JokeControllerV3::class, 'removeOne']);
+    });
 
-Route::middleware(['auth:sanctum'])->group(function () {
-    Route::apiResource('jokes', JokeControllerV3::class);
+    /* Joke Reaction Route */
+    Route::post('{id}/react', [JokeReactionControllerV3::class, 'store'])->middleware(['auth:sanctum',]);
 });
-
-Route::get('jokes/trash/all', [JokeControllerV3::class, 'trash'])->name('jokes.trash');
-Route::post('jokes/trash/recover', [JokeControllerV3::class, 'recoverAll']);
-Route::delete('jokes/trash/empty', [JokeControllerV3::class, 'removeAll']);
-Route::post('jokes/trash/{id}/recover', [JokeControllerV3::class, 'recoverOne']);
-Route::delete("jokes/trash/{id}/remove", [JokeControllerV3::class, 'removeOne']);
-
-
-
-/* Joke Reaction Routes ---------------------------------------------- */
-
-Route::post('jokes/{id}/react', [JokeReactionControllerV3::class, 'store'])->middleware(['auth:sanctum',]);

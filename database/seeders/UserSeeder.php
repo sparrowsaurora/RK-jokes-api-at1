@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class UserSeeder extends Seeder
 {
@@ -12,6 +13,13 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+
+        $roles = ['super-user', 'admin', 'staff', 'client'];
+
+        foreach ($roles as $role) {
+            Role::firstOrCreate(['name' => $role, 'guard_name' => 'web']);
+        }
+
         $seedUsers = [
             [
                 'id' => 99,
@@ -89,13 +97,16 @@ class UserSeeder extends Seeder
             );
 
             // Uncomment this line when using Spatie Permissions
-            // $user->assignRole($roles);
+             $user->assignRole($roles);
             // $user->assignPermissions($permissions);
 
         }
 
         // Uncomment the line below to create (10) randomly named users using the User Factory.
-        // User::factory(10)->create();
+
+        User::factory()->count(10)->create()->each(function ($user) {
+            $user->assignRole('client');
+        });
 
     }
 }

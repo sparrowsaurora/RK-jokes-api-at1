@@ -9,6 +9,7 @@ use App\Responses\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Throwable;
+use function PHPUnit\Framework\isEmpty;
 
 class CategoryController extends Controller
 {
@@ -23,6 +24,32 @@ class CategoryController extends Controller
         return ApiResponse::success($categories, "Categories retrieved");
     }
 
+    public function search(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'search' => ['nullable', 'string', 'max:32'],
+        ]);
+        $search = $validated['search'];
+
+        if (empty($search) || $search == '') {
+            return ApiResponse::error([], "search parameter is empty");
+        };
+
+        $categories = Category::where(function ($query) use ($search) {
+            $query->where('title', 'like', '%' . $search . '%')
+                ->orWhere('description', 'like', '%' . $search . '%');
+        })
+            ->orderBy('title')
+            ->withCount('jokes')
+            ->get();
+
+        if ($categories->isEmpty()) {
+            return ApiResponse::error([], "No results found");
+        }
+
+        return ApiResponse::success(['Categories' => $categories, 'resultsCount' => $categories->count()], "Categories retrieved");
+    }
+
     /**
      * Store a newly created Category in storage.
      *
@@ -32,8 +59,17 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => ['string', 'required', 'min:4'],
-            'description' => ['string', 'nullable', 'min:6'],
+            'title' => [
+                'required',
+                'string',
+                'min:4', 'max:32',
+                'unique:categories,title',
+            ],
+            'description' => [
+                'nullable',
+                'string',
+                'min:6', 'max:255',
+            ],
         ]);
 
         $category = Category::create($validated);
@@ -49,11 +85,18 @@ class CategoryController extends Controller
      */
     public function show(string $id)
     {
-        $category = Category::whereId($id)->get();
+        $category = Category::whereId($id)->withCount('jokes')->get();
+//        $category = Category::whereId($id)->get();
+        $jokes = $category->jokesByDateAddedDesc()->get();
         if (count($category) === 0) {
-            return ApiResponse::error($category, "Category not found", 404);
+            return ApiResponse::error([], "Category not found", 404);
         }
-        return ApiResponse::success($category, "Category retrieved");
+        return ApiResponse::success(
+            [
+                'category' => $category,
+                'jokesInCategory' => $jokes
+            ], "Category retrieved"
+        );
     }
 
     /**
@@ -67,8 +110,16 @@ class CategoryController extends Controller
     {
         try {
             $validated = $request->validate([
-                'title' => ['nullable', 'sometimes', 'string', 'min:4'],
-                'description' => ['nullable', 'sometimes', 'string', 'min:6'],
+                'title' => [
+                    'nullable', 'sometimes',
+                    'string', 'min:4', 'max:32',
+                    'unique:categories,title',
+                    // ^ Rule::unique('categories')->ignore($category->id) -?
+                ],
+                'description' => [
+                    'nullable', 'sometimes',
+                    'string', 'min:6', 'max:255',
+                ],
             ]);
 
             $category = Category::find($id);
@@ -84,11 +135,9 @@ class CategoryController extends Controller
             return ApiResponse::error(
                 ['exception' => $e->getMessage()],
                 'An unexpected error occurred',
-                500
             );
         }
     }
-
 
     /**
      * Remove the specified Category from storage.
