@@ -94,6 +94,13 @@ class JokeController extends Controller
             return ApiResponse::error([], "Joke not found", 404);
         }
 
+        // check user owns joke
+        $user = $request->user();
+        if ($joke->user_id !== $user->id) {
+            return ApiResponse::error([], "You does not own the joke", 404);
+        }
+
+
         $joke->update($validated);
 
         return ApiResponse::success($joke, "Joke updated");
@@ -105,12 +112,20 @@ class JokeController extends Controller
      * @param string $id
      * @return JsonResponse
      */
-    public function destroy(string $id): JsonResponse
+    public function destroy(Request $request, string $id): JsonResponse
     {
+        // check user owns joke or is staff/admin
+
         $joke = Joke::find($id);
 
         if (!$joke) {
             return ApiResponse::error([], "Joke not found", 404);
+        }
+
+        // check user owns joke
+        $user = $request->user();
+        if ($joke->user_id !== $user->id || in_array($user->role, ['staff', 'admin', 'super-user'])) {
+            return ApiResponse::error([], "You does not own the joke", 404);
         }
 
         $joke->delete();

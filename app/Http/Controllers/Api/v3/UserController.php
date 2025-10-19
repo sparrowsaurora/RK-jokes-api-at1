@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v3;
 
 use App\Http\Controllers\Controller;
+use App\Models\Joke;
 use App\Models\User;
 use App\Responses\ApiResponse;
 use Illuminate\Http\JsonResponse;
@@ -154,5 +155,24 @@ class UserController extends Controller
         $user = User::find($id);
         $user->unsuspendUser();
         return ApiResponse::success([], "unsuspended user <{$user->id}> successfully");
+    }
+
+    public function removeJokes(string $id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return ApiResponse::error([], "User not found", 404);
+        }
+
+        $jokes = $user->jokes;
+
+        if ($jokes->isEmpty()) {
+            return ApiResponse::error([], "No jokes found for this user", 404);
+        }
+
+        // Soft delete all jokes (forceDelete() for bypass)
+        Joke::where('user_id', $id)->delete();
+        return ApiResponse::success([], "jokes from user <$id> removed");
     }
 }

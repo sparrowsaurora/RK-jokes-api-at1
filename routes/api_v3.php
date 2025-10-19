@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\v3\CategoryController as CategoryControllerV3;
 use App\Http\Controllers\Api\v3\JokeController as JokeControllerV3;
 use App\Http\Controllers\Api\v3\JokeReactionController as JokeReactionControllerV3;
 use App\Http\Controllers\Api\v3\UserController as UserControllerV3;
+use App\Http\Controllers\Api\v3\RoleController as RoleControllerV3;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -40,27 +41,47 @@ Route::prefix('auth')
     });
 
 /* Admin - User Controller Routes ---------------------------------------------------- */
-Route::middleware('role:super-user|admin|staff')->group(function () {
+//Route::middleware('role:super-user|admin|staff')->group(function () {
     Route::prefix('admin')
         ->group(function () {
             Route::get('/', [UserControllerV3::class, 'adminDashboard']);
-            Route::resource('users', UserControllerV3::class);
             Route::prefix('users')
                 ->group(function () {
+                    Route::get('/', [UserControllerV3::class, 'index'])->name('users.index');
+                    // no store method needed
+                    Route::get('{user}', [UserControllerV3::class, 'show'])->name('users.show');
+                    Route::put('{user}', [UserControllerV3::class, 'update'])->name('users.update');
+                    Route::delete('{user}', [UserControllerV3::class, 'destroy'])->name('users.destroy');
+
                     //Route::get('/', [AdminUserControllerV3::class, 'users'])->name('users');
+                    Route::delete('{user}/jokes', [UserControllerV3::class, 'removeJokes']);
                     Route::post('suspend/{userId}', [UserControllerV3::class, 'suspendUser']);
                     Route::post('unsuspend/{userId}', [UserControllerV3::class, 'unsuspendUser']);
                     Route::post('search', [UserControllerV3::class, 'search']);
                 });
+            Route::prefix('roles')
+                ->group(function () {
+                    Route::get('/', [RoleControllerV3::class, 'index'])->name('roles.index');
+                    Route::post('/', [RoleControllerV3::class, 'store'])->name('roles.store');
+                    Route::get('{role}', [RoleControllerV3::class, 'show'])->name('roles.show');
+                    Route::put('{role}', [RoleControllerV3::class, 'update'])->name('roles.update');
+                    Route::delete('{role}', [RoleControllerV3::class, 'destroy'])->name('roles.destroy');
+                });
         });
-});
+//});
 
 
 /* Categories Controller Routes ------------------------------------------------------ */
 Route::middleware('role:super-user|admin|staff')->group(function () {
-    Route::resource("categories", CategoryControllerV3::class);
+//    Route::resource("categories", CategoryControllerV3::class);
     Route::prefix('categories')
         ->group(function () {
+            Route::get('/', [CategoryControllerV3::class, 'index'])->name('category.index');
+            Route::post('/', [CategoryControllerV3::class, 'store'])->name('category.store');
+            Route::get('{category}', [CategoryControllerV3::class, 'show'])->name('category.show');
+            Route::put('{category}', [CategoryControllerV3::class, 'update'])->name('category.update');
+            Route::delete('{category}', [CategoryControllerV3::class, 'destroy'])->name('category.destroy');
+
             Route::post('search', [CategoryControllerV3::class, 'search']);
 
             Route::prefix('trash')
@@ -79,24 +100,33 @@ Route::middleware('role:super-user|admin|staff')->group(function () {
 });
 
 /* Jokes Controller Routes ----------------------------------------------------- */
+Route::get('jokes/random', [JokeControllerV3::class, 'random']);
+
 Route::middleware(['role:super-user|admin|staff|client', 'auth:sanctum',])->group(function () {
-    Route::resource('jokes', JokeControllerV3::class);
     Route::prefix('jokes')
         ->group(function () {
-        Route::get('random', [JokeControllerV3::class, 'random']);
-        Route::get('{categoryId}/all', [JokeControllerV3::class, 'jokesByCategory']);
-        /* Joke Reaction Route */
-        Route::post('{id}/react', [JokeReactionControllerV3::class, 'store']);
+            // Replacement of Route::resource('jokes', JokeControllerV3::class);
+            Route::get('/', [JokeControllerV3::class, 'index'])->name('jokes.index');
+            Route::post('/', [JokeControllerV3::class, 'store'])->name('jokes.store');
+            Route::get('{joke}', [JokeControllerV3::class, 'show'])->name('jokes.show');
+            Route::put('{joke}', [JokeControllerV3::class, 'update'])->name('jokes.update');
+            Route::delete('{joke}', [JokeControllerV3::class, 'destroy'])->name('jokes.destroy');
 
-        Route::middleware('role:super-user|admin|staff')->group(function () {
-            Route::prefix('trash')
+
+            Route::get('{categoryId}/all', [JokeControllerV3::class, 'jokesByCategory']);
+            /* Joke Reaction Route */
+            Route::post('{id}/react', [JokeReactionControllerV3::class, 'store']);
+
+            Route::middleware('role:super-user|admin|staff')
                 ->group(function () {
-                Route::get('/', [JokeControllerV3::class, 'trash'])->name('jokes.trash');
-                Route::post('recover', [JokeControllerV3::class, 'recoverAll']);
-                Route::delete('empty', [JokeControllerV3::class, 'removeAll']);
-                Route::post('{id}/recover', [JokeControllerV3::class, 'recoverOne']);
-                Route::delete("{id}/remove", [JokeControllerV3::class, 'removeOne']);
-            });
+                    Route::prefix('trash')
+                        ->group(function () {
+                        Route::get('/', [JokeControllerV3::class, 'trash'])->name('jokes.trash');
+                        Route::post('recover', [JokeControllerV3::class, 'recoverAll']);
+                        Route::delete('empty', [JokeControllerV3::class, 'removeAll']);
+                        Route::post('{id}/recover', [JokeControllerV3::class, 'recoverOne']);
+                        Route::delete("{id}/remove", [JokeControllerV3::class, 'removeOne']);
+                        });
+                });
         });
-    });
 });
