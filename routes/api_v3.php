@@ -107,9 +107,6 @@ Route::middleware('role:super-user|admin|staff')->group(function () {
 });
 
 /* Jokes Controller Routes ----------------------------------------------------- */
-
-/* TODO: Joke Perms                                        */
-
 Route::get('jokes/random', [JokeControllerV3::class, 'random']);
 
 Route::middleware(['role:super-user|admin|staff|client', 'auth:sanctum',])->group(function () {

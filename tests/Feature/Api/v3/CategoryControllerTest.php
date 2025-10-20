@@ -3,7 +3,7 @@
 use \App\Models\Category;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-const API_VER = 'v2';
+const API_VER = 'v3';
 
 uses(RefreshDatabase::class);
 
@@ -131,7 +131,7 @@ test('create category title too short error', function () {
 test('create category description too short error', function () {
     $data = [
         'title' => 'This is a test category',
-        'description' =>'short' // The description is too short
+        'description' => 'short' // The description is too short
     ];
 
     $response = $this->postJson('/api/' . API_VER . '/categories', $data);
