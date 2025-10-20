@@ -126,7 +126,7 @@ class UserController extends Controller
 
         if (empty($search) || $search == '') {
             return ApiResponse::error([], "search parameter is empty");
-        };
+        }
 
         $users = User::where(function ($query) use ($search) {
             $query->where('name', 'like', '%' . $search . '%')
@@ -174,5 +174,45 @@ class UserController extends Controller
         // Soft delete all jokes (forceDelete() for bypass)
         Joke::where('user_id', $id)->delete();
         return ApiResponse::success([], "jokes from user <$id> removed");
+    }
+
+    public function logoutUser(string $id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return ApiResponse::error([], "User not found", 404);
+        }
+        $user->logout();
+        return ApiResponse::success([], "User logged out successfully");
+    }
+
+    public function assignRole(request $request, string $id)
+    {
+        $validated = $request->validate([
+            'role' => ['required', 'string', 'min:4'],
+        ]);
+        $user = User::find($id);
+        $user->assignRole($validated['role']);
+
+    }
+
+    public function removeVotes(string $id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return ApiResponse::error([], "User not found", 404);
+        }
+
+        $reactions = $user->jokeReactions;
+
+        if ($reactions->isEmpty()) {
+            return ApiResponse::error([], "No votes found for this user", 404);
+        }
+
+        // Delete all reactions
+        $user->jokeReactions()->delete();
+
+        return ApiResponse::success([], "All votes from user <{$user->id}> deleted successfully");
     }
 }

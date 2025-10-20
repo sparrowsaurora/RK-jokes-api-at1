@@ -56,8 +56,33 @@ class RoleController extends Controller
 
     public function destroy(string $id)
     {
+        if ($id == '1') {
+            return ApiResponse::error([], "'super-user' role cannot be deleted");
+        }
         $role = Role::findById($id);
         $role->delete();
         return ApiResponse::success($role, 'Role deleted successfully');
+    }
+
+    public function logoutRole(Request $request, string $id)
+    {
+        if ($id == '1') {
+            return ApiResponse::error([], "'super-user' role cannot be logged out");
+        }
+
+        $user = $request->user();
+        if ($user->role == 'admin' && $id == '2') {
+            return ApiResponse::error([], "'admin' roles' cannot be logged out by an admin user");
+        }
+
+        $role = Role::findById($id);
+        $roleName = $role->name;
+        // get all users in role
+        $users = $role->users;
+        for ($i = 0; $i < count($users); $i++) {
+            $user = $users[$i];
+            $user->logout();
+        }
+        return ApiResponse::success([], "$roleName Users logged out successfully");
     }
 }

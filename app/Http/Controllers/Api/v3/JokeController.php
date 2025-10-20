@@ -124,8 +124,9 @@ class JokeController extends Controller
 
         // check user owns joke
         $user = $request->user();
-        if ($joke->user_id !== $user->id || in_array($user->role, ['staff', 'admin', 'super-user'])) {
-            return ApiResponse::error([], "You does not own the joke", 404);
+//        if ($joke->user_id !== $user->id || !$user->hasAnyRole(['super-user', 'admin'])) {
+        if ($joke->user_id !== $user->id || !$user->hasAnyRole(['admin', 'staff', 'super-user'])) {
+            return ApiResponse::error([], "You do not have permission to delete this joke", 403);
         }
 
         $joke->delete();
