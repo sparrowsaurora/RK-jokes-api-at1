@@ -63,8 +63,6 @@ class AuthController extends Controller
 
         $user->assignRole('client'); // assign client role (new)
 
-//        event(new Registered($user));
-
         $token = $user->createToken('MyAppToken')->plainTextToken;
 
         return ApiResponse::success(
@@ -122,12 +120,15 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
+
         $token = $user->createToken('MyAppToken')->plainTextToken;
 
+        $tokens = $user->tokens();
         return ApiResponse::success(
             [
                 'token' => $token,
                 'user' => $user,
+                'tokens' => $tokens
             ],
             'Login successful'
         );

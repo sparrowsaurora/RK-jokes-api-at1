@@ -209,11 +209,12 @@ class JokeController extends Controller
         return ApiResponse::success([], "Joke permanently deleted");
     }
 
-    public function random()
+    public function random(Request $request)
     {
         $joke = Joke::inRandomOrder()->first();
 
-        return ApiResponse::success($joke, "Random joke retrieved");
+        $tokens = $request->user();
+        return ApiResponse::success([$joke, 'tokens' => $tokens], "Random joke retrieved");
     }
 
     // Display all jokes in a category

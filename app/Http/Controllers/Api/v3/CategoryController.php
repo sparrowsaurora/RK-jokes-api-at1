@@ -18,10 +18,11 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         $categories = Category::all();
-        return ApiResponse::success($categories, "Categories retrieved");
+        $user_token = $request->user();
+        return ApiResponse::success(['categories'=> $categories, 'user' => $user_token], "Categories retrieved");
     }
 
     public function search(Request $request): JsonResponse

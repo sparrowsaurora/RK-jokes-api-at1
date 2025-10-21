@@ -32,7 +32,7 @@ Route::prefix('auth')
         Route::post('register', [AuthControllerV3::class, 'register']);
         Route::post('login', [AuthControllerV3::class, 'login']);
 
-        Route::middleware(['role:super-user|admin|staff|client', 'auth:sanctum'])->group(function () {
+        Route::middleware(['auth:sanctum'])->group(function () {
             Route::get('profile', [AuthControllerV3::class, 'profile']);
             Route::post('logout', [AuthControllerV3::class, 'logout']);
             Route::put('edit', [AuthControllerV3::class, 'edit']);
@@ -109,7 +109,7 @@ Route::middleware('role:super-user|admin|staff')->group(function () {
 /* Jokes Controller Routes ----------------------------------------------------- */
 Route::get('jokes/random', [JokeControllerV3::class, 'random']);
 
-Route::middleware(['role:super-user|admin|staff|client', 'auth:sanctum',])->group(function () {
+Route::middleware(['auth:sanctum',])->group(function () {
     Route::prefix('jokes')
         ->group(function () {
             /* Joke Reaction Route */
